@@ -1,0 +1,108 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  VERSION: 2.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Ensure the required Android SDK components
+        run: |
+          SDKMANAGER="$(command -v sdkmanager || echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager")"
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+
+      - name: Assemble the web app into www/
+        run: node scripts/assemble-www.js
+
+      - name: Install npm dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Build release APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Sign and align the release APK
+        run: |
+          set -euo pipefail
+          BT="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/* | sort -V | tail -1)"
+          echo "build-tools: $BT"
+
+          keytool -genkeypair -v -keystore release.keystore -alias ppm \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass ppmrelease -keypass ppmrelease \
+            -dname "CN=Passport Photo Maker, OU=Personal, O=Harsh, C=IN"
+
+          UNSIGNED="$(ls android/app/build/outputs/apk/release/*.apk | head -1)"
+          echo "unsigned: $UNSIGNED"
+
+          "$BT/zipalign" -p -f 4 "$UNSIGNED" aligned.apk
+          "$BT/apksigner" sign --ks release.keystore \
+            --ks-pass pass:ppmrelease --key-pass pass:ppmrelease \
+            --out "passport-photo-maker-${VERSION}-release.apk" aligned.apk
+          "$BT/apksigner" verify --print-certs "passport-photo-maker-${VERSION}-release.apk"
+
+      - name: Collect the APKs
+        run: |
+          mkdir -p dist
+          cp "passport-photo-maker-${VERSION}-release.apk" dist/
+          cp android/app/build/outputs/apk/debug/app-debug.apk "dist/passport-photo-maker-${VERSION}-debug.apk"
+          ls -la dist/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: passport-photo-maker-apk
+          path: dist/*.apk
+          retention-days: 90
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Passport Photo Maker & Print v${{ env.VERSION }}
+          body: |
+            Android builds of **Passport Photo Maker & Print**.
+
+            | File | Notes |
+            |---|---|
+            | `passport-photo-maker-${{ env.VERSION }}-release.apk` | Signed release build — install this one |
+            | `passport-photo-maker-${{ env.VERSION }}-debug.apk` | Debug build, for testing |
+
+            **To install:** open the APK on your phone and allow *"install unknown apps"* for whichever app you downloaded it with. The app runs fully offline; photos never leave the device.
+          files: dist/*.apk
+          draft: false
+          prerelease: false

@@ -1,0 +1,12 @@
+{
+  "appId": "com.harsh.passportphoto",
+  "appName": "Passport Photo Maker",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#eef4fd"
+  }
+}

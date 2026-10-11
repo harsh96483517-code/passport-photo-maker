@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# generated web bundle for the native project (built by scripts/assemble-www.js)
+www/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/capacitor-cordova-android-plugins/
+
+# android build output
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/capacitor.settings.gradle
+
+# signing / artefacts
+*.keystore
+*.jks
+*.apk
+*.aab

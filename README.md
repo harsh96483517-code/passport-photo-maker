@@ -28,6 +28,30 @@ This is a functioning application, not a mockup. Every control is wired to real 
 | **Offline / installable** | Service worker caches the shell; a web app manifest makes it installable to the home screen |
 | **Light & dark** | Follows the system theme, or force either from Settings |
 
+## 📱 Android APK
+
+The app is wrapped with **Capacitor** so it installs as a real Android app — bundled assets, no browser chrome, works fully offline.
+
+Grab the APK from the [**Releases page**](../../releases/latest):
+
+| File | Notes |
+|---|---|
+| `passport-photo-maker-2.0.0-release.apk` | Signed release build — install this one |
+| `passport-photo-maker-2.0.0-debug.apk` | Debug build, for testing |
+
+**To install:** open the APK on your phone and allow *"install unknown apps"* for whichever app you downloaded it with.
+
+APKs are not committed to the repo — they're built in CI by [`.github/workflows/android.yml`](.github/workflows/android.yml), which runs on a GitHub runner (those have the JDK and Android SDK this project needs), signs the release build with `apksigner`, and attaches both APKs to a GitHub Release. Trigger it from **Actions → Build Android APK → Run workflow**, or by pushing a `v*` tag.
+
+To build locally you need JDK 17 and the Android SDK:
+
+```bash
+npm install
+npm run apk:debug      # → android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+The native project lives in `android/`. `www/` is assembled from the repo root by `scripts/assemble-www.js` and is gitignored — the web app stays at the root so GitHub Pages can serve it.
+
 ## ▶️ Running it
 
 The camera needs a **secure context** — `https://` or `localhost`. Opening `index.html` from the filesystem (`file://`) will run everything *except* the live camera, so serve it locally instead:
