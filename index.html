@@ -1,869 +1,261 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Passport Photo Maker &amp; Print — Liquid Glass</title>
-<meta name="description" content="A premium iOS Liquid Glass prototype for a Passport Photo Maker & Print app.">
-<style>
-/* ============================================================
-   LIQUID GLASS DESIGN SYSTEM
-   ============================================================ */
-:root{
-  --blue:#1677FF;
-  --blue-deep:#0a5fe0;
-  --blue-soft:#e8f1ff;
-  --ink:#0b1220;
-  --muted:#5d6b82;
-  --line:rgba(12,30,60,.10);
-
-  --glass:linear-gradient(135deg, rgba(255,255,255,.66), rgba(255,255,255,.34));
-  --glass-2:linear-gradient(135deg, rgba(255,255,255,.78), rgba(255,255,255,.48));
-  --glass-dark:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-  --stroke:rgba(255,255,255,.75);
-  --stroke-soft:rgba(255,255,255,.40);
-  --shadow:0 22px 44px -18px rgba(9,32,74,.34);
-  --shadow-sm:0 12px 26px -14px rgba(9,32,74,.30);
-  --radius:26px;
-  --radius-sm:18px;
-  --blur:blur(26px) saturate(185%);
-  --txt:var(--ink);
-  --txt-muted:var(--muted);
-}
-html[data-theme="dark"]{
-  --ink:#eef4ff;
-  --muted:#bcc9e0;
-  --glass:linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
-  --glass-2:linear-gradient(135deg, rgba(255,255,255,.20), rgba(255,255,255,.08));
-  --stroke:rgba(255,255,255,.22);
-  --stroke-soft:rgba(255,255,255,.12);
-  --shadow:0 24px 50px -20px rgba(0,0,0,.65);
-  --shadow-sm:0 14px 30px -16px rgba(0,0,0,.6);
-  --line:rgba(255,255,255,.12);
-}
-
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  color:var(--txt);
-  min-height:100vh;
-  background:
-    radial-gradient(1200px 700px at 15% -10%, #dcebff 0%, rgba(220,235,255,0) 55%),
-    radial-gradient(1000px 700px at 100% 0%, #eaf3ff 0%, rgba(234,243,255,0) 50%),
-    radial-gradient(900px 900px at 50% 120%, #d7e8ff 0%, rgba(215,232,255,0) 55%),
-    linear-gradient(180deg,#f4f8ff 0%, #eef4fd 60%, #e9f1fb 100%);
-  transition:background .5s ease;
-}
-html[data-theme="dark"] body{
-  background:
-    radial-gradient(1200px 700px at 15% -10%, #12203c 0%, rgba(18,32,60,0) 55%),
-    radial-gradient(1000px 700px at 100% 0%, #101b33 0%, rgba(16,27,51,0) 50%),
-    linear-gradient(180deg,#080d18 0%, #0b1120 60%, #0a0f1c 100%);
-}
-
-/* ---------- Stage / showcase chrome ---------- */
-.stage{max-width:1180px;margin:0 auto;padding:34px 20px 60px}
-.stage-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
-.stage-title h1{margin:0;font-size:22px;letter-spacing:-.02em;font-weight:700}
-.stage-title p{margin:4px 0 0;font-size:13px;color:var(--txt-muted)}
-.stage-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-
-.switch{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 26px}
-.pill{
-  border:1px solid var(--stroke);cursor:pointer;font:inherit;font-size:13px;font-weight:600;
-  color:var(--txt);padding:9px 16px;border-radius:999px;
-  background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.8);
-  transition:transform .25s cubic-bezier(.2,.9,.3,1.3), background .25s, color .25s, box-shadow .25s;
-}
-.pill:hover{transform:translateY(-2px)}
-.pill.active{color:#fff;background:linear-gradient(135deg,#2b8bff,#0a5fe0);border-color:rgba(255,255,255,.5);box-shadow:0 16px 30px -14px rgba(10,95,224,.8)}
-
-.ghost-btn{
-  border:1px solid var(--stroke);background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  color:var(--txt);font:inherit;font-size:13px;font-weight:600;padding:9px 16px;border-radius:999px;cursor:pointer;
-  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.8);transition:transform .25s cubic-bezier(.2,.9,.3,1.3)
-}
-.ghost-btn:hover{transform:translateY(-2px)}
-
-/* ---------- Phone frame ---------- */
-.phone-wrap{display:flex;justify-content:center;gap:34px;align-items:flex-start;flex-wrap:wrap}
-.phone{
-  position:relative;width:390px;height:844px;border-radius:56px;flex:0 0 auto;
-  background:#000;
-  padding:11px;
-  box-shadow:
-    0 60px 90px -40px rgba(9,32,74,.55),
-    0 0 0 2px rgba(255,255,255,.55) inset,
-    0 0 0 12px rgba(255,255,255,.28);
-}
-html[data-theme="dark"] .phone{box-shadow:0 60px 90px -40px rgba(0,0,0,.9), 0 0 0 2px rgba(255,255,255,.14) inset, 0 0 0 12px rgba(255,255,255,.06)}
-.phone-inner{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:linear-gradient(180deg,#eef4fd,#e6eefb)}
-html[data-theme="dark"] .phone-inner{background:linear-gradient(180deg,#0b1120,#070b14)}
-html[data-theme="dark"] .orb{opacity:.55}
-.island{position:absolute;top:20px;left:50%;transform:translateX(-50%);width:112px;height:30px;border-radius:20px;background:#05070c;z-index:40}
-
-.screen{position:absolute;inset:0;display:none;flex-direction:column;color:var(--txt)}
-.screen.active{display:flex;animation:screenIn .5s cubic-bezier(.2,.8,.25,1)}
-@keyframes screenIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
-
-/* floating colour orbs behind the glass (the "liquid") */
-.orbs{position:absolute;inset:0;overflow:hidden;z-index:0}
-.orb{position:absolute;border-radius:50%;filter:blur(38px);opacity:.85;animation:float 14s ease-in-out infinite}
-.orb.a{width:280px;height:280px;background:radial-gradient(circle at 30% 30%,#5ea8ff,#1677FF);top:-60px;left:-70px}
-.orb.b{width:240px;height:240px;background:radial-gradient(circle at 30% 30%,#a9d2ff,#7fb8ff);top:120px;right:-90px;animation-delay:-4s}
-.orb.c{width:300px;height:300px;background:radial-gradient(circle at 30% 30%,#c9e0ff,#8fbfff);bottom:-90px;left:-40px;animation-delay:-8s}
-.orb.d{width:180px;height:180px;background:radial-gradient(circle at 30% 30%,#e6f0ff,#bcd9ff);bottom:80px;right:-60px;animation-delay:-6s}
-@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(26px,-22px) scale(1.08)}66%{transform:translate(-20px,18px) scale(.95)}}
-
-.screen-scroll{position:relative;z-index:5;flex:1;overflow-y:auto;overflow-x:hidden;padding:0 20px 120px;scrollbar-width:none}
-.screen-scroll::-webkit-scrollbar{display:none}
-
-/* ---------- Status bar ---------- */
-.statusbar{position:relative;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:18px 26px 6px;font-size:14px;font-weight:600;letter-spacing:.02em}
-.statusbar .sb-right{display:flex;gap:7px;align-items:center}
-.sb-bars{display:flex;gap:2px;align-items:flex-end;height:11px}
-.sb-bars i{width:3px;background:currentColor;border-radius:1px;display:block}
-.sb-bars i:nth-child(1){height:4px}.sb-bars i:nth-child(2){height:6px}.sb-bars i:nth-child(3){height:8px}.sb-bars i:nth-child(4){height:11px}
-.batt{width:24px;height:12px;border:1.5px solid currentColor;border-radius:3.5px;position:relative;opacity:.9}
-.batt::after{content:"";position:absolute;top:2px;left:2px;bottom:2px;width:14px;background:currentColor;border-radius:1.5px}
-.statusbar.on-dark{color:#fff}
-
-/* ---------- Glass primitives ---------- */
-.glass{
-  position:relative;
-  background:var(--glass);
-  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border:1px solid var(--stroke);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.85), inset 0 -1px 0 rgba(255,255,255,.18);
-  overflow:hidden;
-}
-.glass::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(130% 80% at 18% -12%, rgba(255,255,255,.85), rgba(255,255,255,0) 58%);
-}
-.glass > *{position:relative;z-index:2}
-.glass-2{background:var(--glass-2)}
-
-/* glossy primary button */
-.btn-primary{
-  position:relative;border:1px solid rgba(255,255,255,.55);cursor:pointer;font:inherit;font-weight:700;color:#fff;
-  padding:17px 22px;border-radius:20px;width:100%;
-  background:linear-gradient(135deg,#3a95ff 0%, #1677FF 45%, #0a5fe0 100%);
-  box-shadow:0 22px 40px -16px rgba(10,95,224,.85), inset 0 1px 0 rgba(255,255,255,.75), inset 0 -2px 6px rgba(0,30,90,.28);
-  transition:transform .3s cubic-bezier(.2,.9,.3,1.35), box-shadow .3s, filter .3s;
-  overflow:hidden;
-}
-.btn-primary::after{content:"";position:absolute;top:-60%;left:-20%;width:60%;height:220%;transform:rotate(18deg);
-  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));transition:left .6s ease}
-.btn-primary:hover{transform:translateY(-3px)}
-.btn-primary:hover::after{left:120%}
-.btn-primary:active{transform:translateY(0) scale(.985)}
-
-.btn-ghost{
-  border:1px solid var(--stroke);background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  color:var(--txt);font:inherit;font-weight:600;padding:15px 18px;border-radius:18px;cursor:pointer;width:100%;
-  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.8);transition:transform .3s cubic-bezier(.2,.9,.3,1.3)
-}
-.btn-ghost:hover{transform:translateY(-2px)}
-
-.chip{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;font-size:12.5px;font-weight:600;
-  background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--stroke-soft);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
-
-.section-title{display:flex;justify-content:space-between;align-items:baseline;margin:22px 4px 12px;font-size:16px;font-weight:700;letter-spacing:-.01em}
-.section-title .link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer}
-
-.tile{padding:18px;display:flex;flex-direction:column;gap:12px;cursor:pointer;transition:transform .3s cubic-bezier(.2,.9,.3,1.3), box-shadow .3s}
-.tile:hover{transform:translateY(-4px)}
-.tile:active{transform:translateY(-1px) scale(.99)}
-.ico{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;
-  background:linear-gradient(135deg,#4aa0ff,#1677FF);box-shadow:0 12px 22px -10px rgba(22,119,255,.85), inset 0 1px 0 rgba(255,255,255,.6)}
-.ico.soft{background:var(--glass-2);color:var(--blue);border:1px solid var(--stroke);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
-.ico svg{width:24px;height:24px}
-
-h2.page-h{margin:6px 4px 4px;font-size:26px;font-weight:800;letter-spacing:-.03em}
-p.page-sub{margin:0 4px 4px;color:var(--txt-muted);font-size:13.5px}
-
-.row{display:flex;gap:14px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-
-/* ---------- Bottom nav (floating pill) ---------- */
-.bottomnav{position:absolute;left:16px;right:16px;bottom:16px;z-index:35;
-  display:flex;justify-content:space-between;align-items:center;padding:9px;border-radius:26px}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border-radius:18px;
-  font-size:10.5px;font-weight:600;color:var(--txt-muted);cursor:pointer;background:transparent;border:0;font-family:inherit;
-  transition:color .25s, background .3s, transform .3s}
-.nav-item svg{width:22px;height:22px}
-.nav-item.active{color:var(--blue);background:var(--glass-2);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
-.nav-item:active{transform:scale(.94)}
-
-/* ---------- Welcome ---------- */
-.welcome{background:linear-gradient(165deg,#1677FF 0%, #0a5fe0 55%, #074bb4 100%)}
-.welcome .orbs .orb{opacity:.55}
-.welcome .orb.a{background:radial-gradient(circle at 30% 30%,#8cc2ff,#3a95ff)}
-.welcome .orb.b{background:radial-gradient(circle at 30% 30%,#bfe0ff,#7fb8ff)}
-.welcome .orb.c{background:radial-gradient(circle at 30% 30%,#5ea8ff,#1677FF)}
-.welcome-body{position:relative;z-index:6;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 26px 34px;text-align:center;color:#fff}
-.brand-orb{width:104px;height:104px;border-radius:32px;display:grid;place-items:center;margin-bottom:26px;
-  background:var(--glass-2);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border:1px solid rgba(255,255,255,.7);box-shadow:0 30px 60px -20px rgba(0,20,70,.6), inset 0 2px 0 rgba(255,255,255,.9);
-  animation:bob 5s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-.brand-orb svg{width:54px;height:54px;color:#fff}
-.welcome h1{font-size:30px;line-height:1.12;margin:0 0 10px;font-weight:800;letter-spacing:-.03em;text-shadow:0 2px 20px rgba(0,20,70,.35)}
-.welcome .sub{margin:0 0 30px;font-size:14.5px;opacity:.92;font-weight:500}
-.feature-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-bottom:30px}
-.feature{padding:15px 14px;border-radius:20px;text-align:left;display:flex;flex-direction:column;gap:9px;color:#fff;
-  background:rgba(255,255,255,.16);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border:1px solid rgba(255,255,255,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
-.feature svg{width:22px;height:22px}
-.feature b{font-size:13px;font-weight:700}
-.feature span{font-size:10.5px;opacity:.85;font-weight:500}
-
-/* ---------- Home ---------- */
-.home-hero{padding:20px;margin-top:8px}
-.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.act-card{padding:18px 16px;border-radius:24px;display:flex;flex-direction:column;gap:14px;cursor:pointer;min-height:132px;
-  transition:transform .3s cubic-bezier(.2,.9,.3,1.3)}
-.act-card:hover{transform:translateY(-4px)}
-.act-card b{font-size:15px;font-weight:700}
-.act-card small{font-size:11px;color:var(--txt-muted);line-height:1.35}
-.size-scroll{display:flex;gap:12px;overflow-x:auto;padding:2px 4px 8px;scrollbar-width:none}
-.size-scroll::-webkit-scrollbar{display:none}
-.size-card{flex:0 0 auto;width:118px;padding:15px;border-radius:20px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:transform .3s}
-.size-card:hover{transform:translateY(-3px)}
-.size-card .mini{width:44px;height:54px;border-radius:9px;background:linear-gradient(135deg,#dbe9ff,#bcd6ff);border:1px solid rgba(255,255,255,.9);display:grid;place-items:center;color:var(--blue);font-size:9px;font-weight:700}
-.size-card b{font-size:13px}
-.size-card span{font-size:11px;color:var(--txt-muted)}
-.list-card{padding:16px;border-radius:22px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .3s}
-.list-card:hover{transform:translateY(-3px)}
-.list-card .txt{flex:1}
-.list-card b{font-size:14.5px;display:block}
-.list-card small{font-size:11.5px;color:var(--txt-muted)}
-.chev{color:var(--txt-muted);opacity:.7}
-
-/* ---------- Camera ---------- */
-.camera{background:#05070d}
-.cam-preview{position:absolute;inset:0;z-index:1;
-  background:
-   radial-gradient(120% 90% at 50% 20%, rgba(60,110,180,.55), rgba(0,0,0,0) 60%),
-   linear-gradient(180deg,#0c1424 0%,#070b13 60%,#04060b 100%)}
-.cam-face{position:absolute;top:50%;left:50%;transform:translate(-50%,-56%);width:230px;height:300px;z-index:3;
-  border-radius:130px/150px;background:radial-gradient(60% 60% at 50% 35%, rgba(120,160,220,.28), rgba(0,0,0,0) 70%)}
-.guide{position:absolute;z-index:4;width:250px;height:330px;top:50%;left:50%;transform:translate(-50%,-58%)}
-.guide span{position:absolute;width:46px;height:46px;border:3.5px solid rgba(255,255,255,.92);border-radius:16px}
-.guide span:nth-child(1){top:0;left:0;border-right:0;border-bottom:0}
-.guide span:nth-child(2){top:0;right:0;border-left:0;border-bottom:0}
-.guide span:nth-child(3){bottom:0;left:0;border-right:0;border-top:0}
-.guide span:nth-child(4){bottom:0;right:0;border-left:0;border-top:0}
-.cam-tip{position:absolute;top:96px;left:50%;transform:translateX(-50%);z-index:6;color:#fff;font-size:12.5px;font-weight:600;
-  padding:10px 16px;border-radius:999px;white-space:nowrap;
-  background:rgba(255,255,255,.14);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,.28)}
-.cam-top{position:absolute;top:52px;right:20px;z-index:6;display:flex;flex-direction:column;gap:12px}
-.cam-ctl{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;cursor:pointer;
-  background:rgba(255,255,255,.15);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,.3)}
-.cam-ctl svg{width:20px;height:20px}
-.cam-bottom{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:0 30px 40px;display:flex;align-items:center;justify-content:space-between}
-.cam-side{display:flex;flex-direction:column;align-items:center;gap:7px;color:#fff;font-size:10.5px;font-weight:600}
-.cam-side .round{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
-  background:rgba(255,255,255,.15);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,.3)}
-.shutter{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
-  background:rgba(255,255,255,.16);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border:3px solid rgba(255,255,255,.85);box-shadow:0 0 0 6px rgba(255,255,255,.14), 0 20px 40px -14px rgba(0,0,0,.8);
-  transition:transform .25s cubic-bezier(.2,.9,.3,1.4)}
-.shutter:active{transform:scale(.92)}
-.shutter i{width:62px;height:62px;border-radius:50%;background:linear-gradient(160deg,#fff,#dbe9ff);display:block;box-shadow:inset 0 -3px 8px rgba(0,30,90,.25)}
-
-/* ---------- Editor ---------- */
-.editor-photo{position:relative;margin:10px 0 0;border-radius:26px;overflow:hidden;height:400px;
-  background:linear-gradient(160deg,#dfe9f7,#c9d8ec);box-shadow:var(--shadow)}
-.editor-photo .subject{position:absolute;inset:0;background:radial-gradient(50% 55% at 50% 38%, rgba(120,150,190,.55), rgba(0,0,0,0) 70%)}
-.crop-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:200px;height:250px;border:2px solid rgba(255,255,255,.95);
-  box-shadow:0 0 0 2000px rgba(8,20,40,.42);border-radius:6px}
-.crop-frame span{position:absolute;width:24px;height:24px;border:3px solid #fff;border-radius:7px}
-.crop-frame span:nth-child(1){top:-3px;left:-3px;border-right:0;border-bottom:0}
-.crop-frame span:nth-child(2){top:-3px;right:-3px;border-left:0;border-bottom:0}
-.crop-frame span:nth-child(3){bottom:-3px;left:-3px;border-right:0;border-top:0}
-.crop-frame span:nth-child(4){bottom:-3px;right:-3px;border-left:0;border-top:0}
-.segmented{display:flex;gap:6px;padding:6px;border-radius:18px;margin:16px 0 12px}
-.segmented button{flex:1;border:0;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--txt-muted);
-  padding:10px;border-radius:13px;cursor:pointer;transition:all .3s}
-.segmented button.active{color:#fff;background:linear-gradient(135deg,#3a95ff,#0a5fe0);box-shadow:0 12px 22px -12px rgba(10,95,224,.9)}
-.tool-row{display:flex;gap:10px;margin-bottom:14px}
-.tool{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10.5px;font-weight:600;color:var(--txt);
-  padding:12px 6px;border-radius:16px;cursor:pointer;transition:transform .3s}
-.tool:hover{transform:translateY(-3px)}
-.tool svg{width:20px;height:20px;color:var(--blue)}
-.slider-block{padding:14px 16px;border-radius:20px;margin-bottom:12px}
-.slider-block .lbl{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:8px}
-.slider-block .lbl span:last-child{color:var(--txt-muted);font-weight:500}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:999px;outline:none;
-  background:linear-gradient(90deg,var(--blue) 0%,var(--blue) var(--p,60%), rgba(140,160,190,.35) var(--p,60%), rgba(140,160,190,.35) 100%)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;cursor:pointer;
-  border:1px solid rgba(0,0,0,.06);box-shadow:0 6px 14px -4px rgba(10,60,140,.6), inset 0 1px 0 #fff}
-.bg-swatches{display:flex;gap:12px;margin-top:4px}
-.swatch{width:44px;height:44px;border-radius:14px;cursor:pointer;border:2px solid rgba(255,255,255,.9);box-shadow:var(--shadow-sm)}
-.swatch.active{outline:3px solid var(--blue);outline-offset:2px}
-
-/* ---------- Preview ---------- */
-.preview-photo{margin:12px auto 0;width:210px;border-radius:14px;padding:0;overflow:hidden;box-shadow:var(--shadow);
-  border:1px solid rgba(255,255,255,.9)}
-.preview-photo .img{height:260px;background:linear-gradient(160deg,#e6eefb,#cddcf0);position:relative}
-.preview-photo .img::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 55% at 50% 40%, rgba(120,150,190,.6), rgba(0,0,0,0) 72%)}
-.flags{display:flex;justify-content:center;gap:8px;margin:14px 0 4px}
-.flag{width:34px;height:24px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.8);box-shadow:var(--shadow-sm)}
-.flag i{display:block;height:100%}
-.check{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;margin-bottom:10px}
-.check .ok{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#34c98b,#1aa06a);flex:0 0 auto}
-.check .ok svg{width:15px;height:15px}
-.check b{font-size:13.5px;display:block}
-.check small{font-size:11px;color:var(--txt-muted)}
-.spec-row{display:flex;justify-content:space-between;padding:12px 16px;font-size:13px;border-bottom:1px solid var(--line)}
-.spec-row:last-child{border-bottom:0}
-.spec-row span:last-child{font-weight:600}
-
-/* ---------- Sizes ---------- */
-.search{display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:18px;margin:14px 0 12px}
-.search input{border:0;background:transparent;outline:none;font:inherit;font-size:14px;color:var(--txt);width:100%}
-.search svg{width:18px;height:18px;color:var(--txt-muted)}
-.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;padding:9px 16px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;
-  border:1px solid var(--stroke-soft);background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);color:var(--txt-muted)}
-.tab.active{color:#fff;background:linear-gradient(135deg,#3a95ff,#0a5fe0);border-color:transparent}
-.size-row{display:flex;align-items:center;gap:14px;padding:15px;border-radius:20px;margin-bottom:11px;cursor:pointer;transition:transform .3s}
-.size-row:hover{transform:translateY(-3px)}
-.size-row .thumb{width:50px;height:60px;border-radius:10px;background:linear-gradient(135deg,#e2ecff,#c4d9ff);border:1px solid rgba(255,255,255,.9);display:grid;place-items:center;font-size:8.5px;font-weight:700;color:var(--blue);flex:0 0 auto;text-align:center;line-height:1.1}
-.size-row .txt{flex:1}
-.size-row b{font-size:14px;display:block}
-.size-row small{font-size:11px;color:var(--txt-muted)}
-.size-row .dim{font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap}
-
-/* ---------- Print ---------- */
-.sheet{margin:14px auto 0;width:100%;aspect-ratio:4/6;border-radius:16px;background:#fff;padding:16px;display:grid;
-  grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);gap:10px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.9)}
-.sheet .slot{border-radius:5px;background:linear-gradient(160deg,#e9f0fb,#cfdcf0);position:relative}
-.sheet .slot::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 55% at 50% 42%, rgba(120,150,190,.55), rgba(0,0,0,0) 72%)}
-.field{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:18px;margin-bottom:10px;font-size:13.5px}
-.field .k{color:var(--txt-muted);font-weight:500}
-.field .v{font-weight:700;display:flex;align-items:center;gap:8px}
-.stepper{display:flex;align-items:center;gap:12px}
-.stepper button{width:28px;height:28px;border-radius:50%;border:1px solid var(--stroke);background:var(--glass-2);color:var(--txt);font-size:16px;font-weight:700;cursor:pointer;line-height:1;display:grid;place-items:center}
-.note{padding:14px 16px;border-radius:18px;font-size:12px;color:var(--txt-muted);line-height:1.5;display:flex;gap:10px;margin-top:4px}
-.note svg{width:18px;height:18px;color:var(--blue);flex:0 0 auto}
-
-/* ---------- My photos ---------- */
-.gallery{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:14px}
-.pcard{border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .3s}
-.pcard:hover{transform:translateY(-4px)}
-.pcard .ph{height:130px;background:linear-gradient(160deg,#e6eefb,#cfdcf0);position:relative}
-.pcard .ph::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 55% at 50% 42%, rgba(120,150,190,.6), rgba(0,0,0,0) 72%)}
-.pcard .meta{padding:11px 13px}
-.pcard .meta b{font-size:12.5px;display:block}
-.pcard .meta small{font-size:10.5px;color:var(--txt-muted)}
-.badge{position:absolute;top:9px;left:9px;font-size:9.5px;font-weight:700;color:#fff;padding:4px 9px;border-radius:999px;
-  background:rgba(22,119,255,.85);backdrop-filter:blur(8px);z-index:2}
-.empty{padding:60px 20px;text-align:center;color:var(--txt-muted);display:none}
-
-/* ---------- Toast ---------- */
-.toast{position:absolute;left:50%;bottom:104px;transform:translate(-50%,20px);z-index:60;opacity:0;pointer-events:none;
-  padding:13px 20px;border-radius:16px;font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;max-width:330px;
-  background:var(--glass-2);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--stroke);
-  box-shadow:var(--shadow);transition:opacity .35s, transform .45s cubic-bezier(.2,.9,.3,1.4)}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-
-html[data-theme="dark"] .nav-item.active{color:#7fb8ff}
-html[data-theme="dark"] .section-title .link,
-html[data-theme="dark"] .size-row .dim,
-html[data-theme="dark"] .ico.soft{color:#6fb0ff}
-
-.footnote{margin-top:26px;font-size:12px;color:var(--txt-muted);text-align:center;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.6}
-
-@media (max-width:860px){ .phone{transform:scale(.86);transform-origin:top center;margin-bottom:-120px} }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Passport Photo Maker &amp; Print</title>
+<meta name="description" content="Make passport, visa and ID photos on your device. Crop, adjust, replace the background, then print a ready sheet.">
+<meta name="theme-color" content="#1677FF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ID Photos">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<div class="stage">
-  <header class="stage-head">
-    <div class="stage-title">
-      <h1>Passport Photo Maker &amp; Print</h1>
-      <p>iOS Liquid Glass prototype · 8 screens · tap anything to explore</p>
-    </div>
-    <div class="stage-actions">
-      <button class="ghost-btn" id="themeBtn">◐ Dark mode</button>
-      <button class="ghost-btn" id="shotBtn">Export previews</button>
-    </div>
+<div class="app" id="app">
+  <div class="orbs" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+
+  <!-- ================= APP BAR ================= -->
+  <header class="appbar">
+    <button class="icon-btn plain hidden" id="backBtn" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="title" id="appTitle">Passport Photo Maker<small id="appSub">Perfect ID photos, ready in minutes</small></div>
+    <button class="icon-btn plain" id="themeBtn" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    </button>
   </header>
 
-  <nav class="switch" id="switch"></nav>
+  <!-- ================= VIEWS ================= -->
+  <main class="views">
 
-  <div class="phone-wrap">
-    <div class="phone" id="phone">
-      <div class="island"></div>
-      <div class="phone-inner">
-
-        <!-- ============ 1. WELCOME ============ -->
-        <section class="screen active welcome" data-screen="welcome" data-title="Welcome">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="orb d"></div></div>
-          <div class="statusbar on-dark"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="welcome-body">
-            <div class="brand-orb">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><circle cx="12" cy="10" r="3"/><path d="M8 17c1-1.6 2.4-2.4 4-2.4s3 .8 4 2.4"/></svg>
-            </div>
-            <h1>Passport Photo<br>Maker &amp; Print</h1>
-            <p class="sub">Perfect ID Photos. Ready in Minutes.</p>
-            <div class="feature-row">
-              <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/></svg><b>Smart Crop</b><span>Auto face framing</span></div>
-              <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 9h8M8 13h5"/></svg><b>ID Sizes</b><span>Passport, visa, PAN…</span></div>
-              <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/></svg><b>Background Editor</b><span>White, blue, custom</span></div>
-              <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 9V6h4M18 9V6h-4M6 15v3h4M18 15v3h-4"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg><b>Print Ready</b><span>300 DPI sheets</span></div>
-            </div>
-            <button class="btn-primary" data-go="home">Get Started&nbsp;&nbsp;→</button>
-          </div>
-        </section>
-
-        <!-- ============ 2. HOME ============ -->
-        <section class="screen" data-screen="home" data-title="Home">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
-          <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="screen-scroll">
-            <div class="row" style="justify-content:space-between;align-items:center;margin:6px 4px 0">
-              <div>
-                <h2 class="page-h" style="font-size:22px;margin:0">Hello, Harsh 👋</h2>
-                <p class="page-sub" style="margin-top:4px">Make Professional Passport Photos</p>
-              </div>
-              <div class="glass" style="width:46px;height:46px;border-radius:15px;display:grid;place-items:center;cursor:pointer" data-go="settings">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1677FF" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
-              </div>
-            </div>
-
-            <div class="hero-actions" style="margin-top:16px">
-              <div class="glass act-card" data-go="camera">
-                <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h1.5l1-1.6h5l1 1.6H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.2"/></svg></div>
-                <div><b>Take Photo</b><br><small>Open camera</small></div>
-              </div>
-              <div class="glass act-card" data-go="editor">
-                <div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg></div>
-                <div><b>Choose from Gallery</b><br><small>Select existing photo</small></div>
-              </div>
-            </div>
-
-            <div class="section-title">Popular Sizes <span class="link" data-go="sizes">See All →</span></div>
-            <div class="size-scroll">
-              <div class="glass size-card" data-go="sizes"><div class="mini">51×51</div><b>Passport</b><span>51 × 51 mm</span></div>
-              <div class="glass size-card" data-go="sizes"><div class="mini">35×45</div><b>Visa</b><span>35 × 45 mm</span></div>
-              <div class="glass size-card" data-go="sizes"><div class="mini">35×45</div><b>ID Card</b><span>35 × 45 mm</span></div>
-              <div class="glass size-card" data-go="sizes"><div class="mini">20×20</div><b>PAN Card</b><span>20 × 20 mm</span></div>
-            </div>
-
-            <div class="section-title">Quick Actions</div>
-            <div class="grid2">
-              <div class="glass tile" data-go="sizes"><div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><circle cx="12" cy="10" r="3"/><path d="M8 17c1-1.6 2.4-2.4 4-2.4s3 .8 4 2.4"/></svg></div><b>Passport</b></div>
-              <div class="glass tile" data-go="sizes"><div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></svg></div><b>Visa</b></div>
-              <div class="glass tile" data-go="sizes"><div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><circle cx="8" cy="11" r="2.2"/><path d="M4.5 17c.8-1.4 2-2.1 3.5-2.1s2.7.7 3.5 2.1M14 10h4M14 14h3"/></svg></div><b>ID Card</b></div>
-              <div class="glass tile" data-go="sizes"><div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg></div><b>Custom Size</b></div>
-            </div>
-
-            <div class="section-title">Your Space</div>
-            <div class="glass list-card" data-go="photos" style="margin-bottom:12px"><div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg></div><div class="txt"><b>My Photos</b><small>Saved &amp; printed photos</small></div><span class="chev">›</span></div>
-            <div class="glass list-card" data-go="print" style="margin-bottom:12px"><div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="6" rx="1.2"/></svg></div><div class="txt"><b>Print Photos</b><small>Multiple copies on 4 × 6" or A4</small></div><span class="chev">›</span></div>
-            <div class="glass list-card" data-go="preview"><div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="txt"><b>Recent Projects</b><small>Continue where you left off</small></div><span class="chev">›</span></div>
-          </div>
-          <nav class="glass bottomnav">
-            <button class="nav-item active" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/></svg>Home</button>
-            <button class="nav-item" data-go="photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg>My Photos</button>
-            <button class="nav-item" data-go="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="6" rx="1.2"/></svg>Print</button>
-            <button class="nav-item" data-go="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12h2M18 12h2M12 4v2M12 18v2"/></svg>Settings</button>
-          </nav>
-        </section>
-
-        <!-- ============ 3. CAMERA ============ -->
-        <section class="screen camera" data-screen="camera" data-title="Camera">
-          <div class="cam-preview"></div>
-          <div class="cam-face"></div>
-          <div class="statusbar on-dark"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="cam-tip">Keep your face in the frame</div>
-          <div class="guide"><span></span><span></span><span></span><span></span></div>
-          <div class="cam-top">
-            <div class="cam-ctl" data-toast="Flash: Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
-            <div class="cam-ctl" data-toast="Grid guides on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></div>
-          </div>
-          <div class="cam-bottom">
-            <div class="cam-side" data-go="editor"><div class="round"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg></div>Gallery</div>
-            <div class="shutter" id="shutter"><i></i></div>
-            <div class="cam-side" data-toast="Front camera"><div class="round"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg></div>Flip</div>
-          </div>
-        </section>
-
-        <!-- ============ 4. EDITOR ============ -->
-        <section class="screen" data-screen="editor" data-title="Crop &amp; Adjust">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
-          <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="screen-scroll">
-            <div class="row" style="justify-content:space-between;align-items:center;margin:4px 4px 0">
-              <div class="glass" style="width:42px;height:42px;border-radius:14px;display:grid;place-items:center;cursor:pointer" data-go="camera">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1677FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-              </div>
-              <h2 class="page-h" style="font-size:19px;margin:0">Crop &amp; Adjust</h2>
-              <button class="glass" style="border:0;padding:11px 18px;border-radius:14px;font:inherit;font-weight:700;font-size:13px;color:#1677FF;cursor:pointer" data-go="preview">Done</button>
-            </div>
-
-            <div class="editor-photo">
-              <div class="subject"></div>
-              <div class="crop-frame"><span></span><span></span><span></span><span></span></div>
-            </div>
-
-            <div class="glass segmented">
-              <button class="active" data-seg> Crop</button>
-              <button data-seg>Adjust</button>
-              <button data-seg>Background</button>
-            </div>
-
-            <div class="tool-row">
-              <div class="glass tool" data-toast="Rotated 90°"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 1 2.3 5.6M4 12V7M4 12h5"/></svg>Rotate</div>
-              <div class="glass tool" data-toast="Flipped"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 7 4 12l4 5M16 7l4 5-4 5"/></svg>Flip</div>
-              <div class="glass tool" data-toast="Reset to original"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4"/></svg>Reset</div>
-              <div class="glass tool" data-go="preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/></svg>Preview</div>
-            </div>
-
-            <div class="glass slider-block"><div class="lbl"><span>Brightness</span><span data-out>+12</span></div><input type="range" min="-50" max="50" value="12" data-val></div>
-            <div class="glass slider-block"><div class="lbl"><span>Contrast</span><span data-out>+8</span></div><input type="range" min="-50" max="50" value="8" data-val></div>
-            <div class="glass slider-block"><div class="lbl"><span>Saturation</span><span data-out>+4</span></div><input type="range" min="-50" max="50" value="4" data-val></div>
-
-            <div class="section-title">Background</div>
-            <div class="glass" style="padding:16px;border-radius:20px">
-              <div class="bg-swatches">
-                <div class="swatch active" style="background:#ffffff" data-swatch data-toast="Background: White"></div>
-                <div class="swatch" style="background:#dbe9ff" data-swatch data-toast="Background: Light blue"></div>
-                <div class="swatch" style="background:#1677FF" data-swatch data-toast="Background: Blue"></div>
-                <div class="swatch" style="background:#f2f2f4" data-swatch data-toast="Background: Grey"></div>
-                <div class="swatch" style="background:linear-gradient(135deg,#ff9a3c,#ff5e62,#a06bff)" data-swatch data-toast="Background: Custom"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ============ 5. PREVIEW ============ -->
-        <section class="screen" data-screen="preview" data-title="Preview">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
-          <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="screen-scroll">
-            <div class="row" style="justify-content:space-between;align-items:center;margin:4px 4px 0">
-              <div class="glass" style="width:42px;height:42px;border-radius:14px;display:grid;place-items:center;cursor:pointer" data-go="editor">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1677FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-              </div>
-              <h2 class="page-h" style="font-size:19px;margin:0">Preview</h2>
-              <div style="width:42px"></div>
-            </div>
-
-            <div class="preview-photo glass"><div class="img"></div></div>
-            <div class="flags">
-              <div class="flag"><i style="background:linear-gradient(180deg,#ff9933 33%,#fff 33% 66%,#138808 66%)"></i></div>
-              <div class="flag"><i style="background:repeating-linear-gradient(180deg,#b22234 0 8%,#fff 8% 16%);position:relative"></i></div>
-              <div class="flag"><i style="background:linear-gradient(180deg,#012169 50%,#c8102e 50%)"></i></div>
-              <div class="flag"><i style="background:linear-gradient(90deg,#d52b1e 33%,#fff 33% 66%,#d52b1e 66%)"></i></div>
-              <div class="flag"><i style="background:linear-gradient(90deg,#000 33%,#dd0000 33% 66%,#ffce00 66%)"></i></div>
-            </div>
-
-            <div class="glass" style="margin-top:16px;border-radius:20px;overflow:hidden">
-              <div class="spec-row"><span>Size</span><span>51 × 51 mm (Passport)</span></div>
-              <div class="spec-row"><span>Resolution</span><span>600 × 600 px @ 300 DPI</span></div>
-              <div class="spec-row"><span>Background</span><span>White</span></div>
-            </div>
-
-            <div class="section-title">Quality Checks</div>
-            <div class="glass check"><div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5 11-11"/></svg></div><div><b>Framing</b><small>Face centred &amp; headroom correct</small></div></div>
-            <div class="glass check"><div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5 11-11"/></svg></div><div><b>Background</b><small>Plain &amp; evenly lit</small></div></div>
-            <div class="glass check"><div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5 11-11"/></svg></div><div><b>Resolution</b><small>High resolution — print safe</small></div></div>
-
-            <div class="grid2" style="margin-top:6px">
-              <button class="btn-ghost" data-go="editor">Edit Photo</button>
-              <button class="btn-ghost" data-toast="Saved to My Photos">Save Photo</button>
-            </div>
-            <div class="grid2" style="margin-top:12px">
-              <button class="btn-ghost" data-toast="Exported as JPG">Export</button>
-              <button class="btn-ghost" data-toast="Share sheet opened">Share</button>
-            </div>
-            <button class="btn-primary" style="margin-top:12px" data-go="print">Save &amp; Print</button>
-            <p style="font-size:11px;color:var(--txt-muted);text-align:center;margin:14px 10px 0;line-height:1.5">Print dimensions are shown for layout only. Always confirm the current official requirements for your document.</p>
-          </div>
-        </section>
-
-        <!-- ============ 6. SIZES ============ -->
-        <section class="screen" data-screen="sizes" data-title="ID Photo Sizes">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
-          <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="screen-scroll">
-            <div class="row" style="justify-content:space-between;align-items:center;margin:4px 4px 0">
-              <div class="glass" style="width:42px;height:42px;border-radius:14px;display:grid;place-items:center;cursor:pointer" data-go="home">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1677FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-              </div>
-              <h2 class="page-h" style="font-size:19px;margin:0">ID Photo Sizes</h2>
-              <div style="width:42px"></div>
-            </div>
-
-            <div class="glass search">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-              <input type="text" id="sizeSearch" placeholder="Search size, country or document…">
-            </div>
-            <div class="tabs">
-              <div class="tab active" data-filter="all">All</div>
-              <div class="tab" data-filter="passport">Passport</div>
-              <div class="tab" data-filter="visa">Visa</div>
-              <div class="tab" data-filter="id">ID Card</div>
-              <div class="tab" data-filter="custom">Custom</div>
-            </div>
-            <div id="sizeList" style="margin-top:6px"></div>
-          </div>
-        </section>
-
-        <!-- ============ 7. PRINT ============ -->
-        <section class="screen" data-screen="print" data-title="Print Photos">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
-          <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="screen-scroll">
-            <div class="row" style="justify-content:space-between;align-items:center;margin:4px 4px 0">
-              <div class="glass" style="width:42px;height:42px;border-radius:14px;display:grid;place-items:center;cursor:pointer" data-go="preview">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1677FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-              </div>
-              <h2 class="page-h" style="font-size:19px;margin:0">Print Photos</h2>
-              <div style="width:42px"></div>
-            </div>
-
-            <div class="sheet"><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
-            <p style="text-align:center;font-size:12px;color:var(--txt-muted);margin:12px 0 4px">6 copies on 4R (4 × 6 inch) · 300 DPI</p>
-
-            <div class="section-title">Print Options</div>
-            <div class="glass field"><span class="k">Paper Size</span><span class="v" id="paperVal">4R (4 × 6 in) <span class="chev">›</span></span></div>
-            <div class="glass field"><span class="k">Copies</span><span class="v"><span class="stepper"><button id="minus">−</button><b id="copies">2</b><button id="plus">+</button></span></span></div>
-            <div class="glass field"><span class="k">Print Quality</span><span class="v">High (300 DPI)</span></div>
-            <div class="glass field"><span class="k">Color Mode</span><span class="v">Color</span></div>
-
-            <div class="note glass">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-              You can also save as PDF and print later at any photo studio or home printer.
-            </div>
-
-            <button class="btn-primary" style="margin-top:14px" data-toast="Opening system print…">Print Now</button>
-            <button class="btn-ghost" style="margin-top:12px" data-toast="Saved print-ready PDF">Save as PDF</button>
-          </div>
-        </section>
-
-        <!-- ============ 8. MY PHOTOS ============ -->
-        <section class="screen" data-screen="photos" data-title="My Photos">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
-          <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="screen-scroll">
-            <div class="row" style="justify-content:space-between;align-items:center;margin:4px 4px 0">
-              <h2 class="page-h" style="font-size:24px;margin:0">My Photos</h2>
-              <div class="glass" style="width:42px;height:42px;border-radius:14px;display:grid;place-items:center;cursor:pointer" data-toast="Sort: Newest first">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1677FF" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M7 12h10M10 17h4"/></svg>
-              </div>
-            </div>
-            <div class="tabs" style="margin-top:12px">
-              <div class="tab active" data-gal="all">All</div>
-              <div class="tab" data-gal="passport">Passport</div>
-              <div class="tab" data-gal="visa">Visa</div>
-              <div class="tab" data-gal="other">Other</div>
-            </div>
-            <div class="gallery" id="gallery"></div>
-          </div>
-          <nav class="glass bottomnav">
-            <button class="nav-item" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/></svg>Home</button>
-            <button class="nav-item active" data-go="photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg>My Photos</button>
-            <button class="nav-item" data-go="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="6" rx="1.2"/></svg>Print</button>
-            <button class="nav-item" data-go="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12h2M18 12h2M12 4v2M12 18v2"/></svg>Settings</button>
-          </nav>
-        </section>
-
-        <!-- ============ SETTINGS (bonus) ============ -->
-        <section class="screen" data-screen="settings" data-title="Settings">
-          <div class="orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
-          <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sb-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="batt"></span></span></div>
-          <div class="screen-scroll">
-            <div class="row" style="justify-content:space-between;align-items:center;margin:4px 4px 0">
-              <div class="glass" style="width:42px;height:42px;border-radius:14px;display:grid;place-items:center;cursor:pointer" data-go="home">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1677FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-              </div>
-              <h2 class="page-h" style="font-size:19px;margin:0">Settings</h2>
-              <div style="width:42px"></div>
-            </div>
-            <div class="glass field" style="margin-top:16px"><span class="k">Appearance</span><span class="v" id="appearanceVal">Light</span></div>
-            <div class="glass field"><span class="k">Units</span><span class="v">Millimetres (mm)</span></div>
-            <div class="glass field"><span class="k">Default DPI</span><span class="v">300</span></div>
-            <div class="glass field"><span class="k">Language</span><span class="v">English</span></div>
-            <div class="glass field"><span class="k">Delete all photos</span><span class="v" style="color:#e5484d" data-toast="Nothing to delete">Delete</span></div>
-            <p style="font-size:11.5px;color:var(--txt-muted);margin:18px 6px 0;line-height:1.6">Your photos are processed on your device. Only the permissions needed are requested, and you can delete any photo at any time.</p>
-          </div>
-          <nav class="glass bottomnav">
-            <button class="nav-item" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/></svg>Home</button>
-            <button class="nav-item" data-go="photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg>My Photos</button>
-            <button class="nav-item" data-go="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="6" rx="1.2"/></svg>Print</button>
-            <button class="nav-item active" data-go="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12h2M18 12h2M12 4v2M12 18v2"/></svg>Settings</button>
-          </nav>
-        </section>
-
-        <div class="toast" id="toast"></div>
+    <!-- ---------- HOME ---------- -->
+    <section class="view active" data-view="home">
+      <div class="hero-actions">
+        <div class="act" id="goCamera">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h1.5l1-1.6h5l1 1.6H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.2"/></svg></div>
+          <div><b>Take Photo</b><br><small>Use your camera</small></div>
+        </div>
+        <div class="act" id="goGallery">
+          <div class="ico soft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg></div>
+          <div><b>Choose from Gallery</b><br><small>Pick an existing photo</small></div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <p class="footnote">A Liquid Glass design study inspired by Apple's visual language. Sizes shown are layout references — verify current official requirements for any document. Not affiliated with Apple.</p>
+      <div class="section">Photo size <span class="link" data-goto="sizes">See all →</span></div>
+      <div class="tabs" id="homeSizes"></div>
+
+      <div class="section">Continue</div>
+      <div id="homeRecent"></div>
+
+      <div class="note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <span>Your photos never leave your device — everything is processed locally in your browser.</span>
+      </div>
+    </section>
+
+    <!-- ---------- CAMERA ---------- -->
+    <section class="view flush" data-view="camera">
+      <div class="camwrap">
+        <div class="camstage">
+          <video id="video" playsinline autoplay muted></video>
+          <div class="guide" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+          <div class="camtip" id="camTip">Keep your face in the frame</div>
+          <div class="camtop">
+            <button class="camctl" id="flashBtn" aria-label="Flash">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>
+            </button>
+            <button class="camctl" id="gridBtn" aria-label="Grid">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="cambottom">
+          <div class="camside" id="camGallery">
+            <div class="round"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg></div>Gallery
+          </div>
+          <button class="shutter" id="shutter" aria-label="Capture"><i></i></button>
+          <div class="camside" id="camFlip">
+            <div class="round"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg></div>Flip
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- EDITOR ---------- -->
+    <section class="view" data-view="editor">
+      <div class="stage" id="stage">
+        <canvas id="stageCanvas"></canvas>
+        <div class="cropgrid" id="cropGrid"></div>
+      </div>
+
+      <div class="segmented" id="editorSeg">
+        <button class="active" data-panel="crop">Crop</button>
+        <button data-panel="adjust">Adjust</button>
+        <button data-panel="background">Background</button>
+      </div>
+
+      <div data-panelbody="crop">
+        <div class="toolrow">
+          <div class="tool" id="rotL"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 1 2.3 5.6M4 12V7M4 12h5"/></svg>Rotate</div>
+          <div class="tool" id="flipBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 7 4 12l4 5M16 7l4 5-4 5"/></svg>Flip</div>
+          <div class="tool" id="resetBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4"/></svg>Reset</div>
+        </div>
+        <div class="slider"><div class="lbl"><span>Zoom</span><span id="zoomOut">1.0×</span></div><input type="range" id="zoomRange" min="100" max="400" value="100"></div>
+        <p style="font-size:11.5px;color:var(--txt-muted);margin:6px 4px 0">Drag the photo to reposition it inside the frame. Pinch or use the slider to zoom.</p>
+      </div>
+
+      <div data-panelbody="adjust" class="hidden">
+        <div class="slider"><div class="lbl"><span>Brightness</span><span data-out>0</span></div><input type="range" min="-50" max="50" value="0" data-adj="brightness"></div>
+        <div class="slider"><div class="lbl"><span>Contrast</span><span data-out>0</span></div><input type="range" min="-50" max="50" value="0" data-adj="contrast"></div>
+        <div class="slider"><div class="lbl"><span>Saturation</span><span data-out>0</span></div><input type="range" min="-50" max="50" value="0" data-adj="saturation"></div>
+        <button class="btn" id="autoAdjust" style="margin-top:4px">Auto enhance</button>
+      </div>
+
+      <div data-panelbody="background" class="hidden">
+        <p style="font-size:12.5px;color:var(--txt-muted);margin:0 4px 12px;line-height:1.5">Replaces the background behind you. Works best with a plain wall and even lighting.</p>
+        <div class="swatches" id="swatches">
+          <div class="swatch active" data-bg="keep" style="background:repeating-linear-gradient(45deg,#e6eefb,#e6eefb 6px,#cfdcf0 6px,#cfdcf0 12px)" title="Keep original"></div>
+          <div class="swatch" data-bg="#ffffff" style="background:#fff" title="White"></div>
+          <div class="swatch" data-bg="#dbe9ff" style="background:#dbe9ff" title="Light blue"></div>
+          <div class="swatch" data-bg="#1677FF" style="background:#1677FF" title="Blue"></div>
+          <div class="swatch" data-bg="#f2f2f4" style="background:#f2f2f4" title="Light grey"></div>
+          <div class="swatch" data-bg="#0b1220" style="background:#0b1220" title="Dark"></div>
+        </div>
+        <div class="slider" style="margin-top:14px"><div class="lbl"><span>Match tolerance</span><span id="tolOut">32</span></div><input type="range" id="tolRange" min="8" max="90" value="32"></div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:16px" id="editorDone">Continue →</button>
+    </section>
+
+    <!-- ---------- PREVIEW ---------- -->
+    <section class="view" data-view="preview">
+      <div class="resultbox"><canvas id="resultCanvas"></canvas></div>
+      <p style="text-align:center;font-size:12.5px;color:var(--txt-muted);margin:12px 0 4px" id="resultCaption">—</p>
+
+      <div class="section">Quality checks</div>
+      <div id="checks"></div>
+
+      <div class="section">Details</div>
+      <div class="field"><span class="k">Size</span><span class="v" id="specSize">—</span></div>
+      <div class="field"><span class="k">Pixels @ DPI</span><span class="v" id="specPx">—</span></div>
+      <div class="field"><span class="k">Background</span><span class="v" id="specBg">—</span></div>
+
+      <div class="hero-actions" style="margin-top:16px">
+        <button class="btn" id="backToEdit">Edit photo</button>
+        <button class="btn" id="savePhoto">Save photo</button>
+      </div>
+      <div class="hero-actions" style="margin-top:12px">
+        <button class="btn" id="exportJpg">Export JPG</button>
+        <button class="btn" id="shareBtn">Share</button>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px" id="goPrint">Save &amp; Print</button>
+      <p style="font-size:11px;color:var(--txt-muted);text-align:center;margin:14px 8px 0;line-height:1.5">Dimensions are for layout. Always confirm the current official requirements for your document.</p>
+    </section>
+
+    <!-- ---------- SIZES ---------- -->
+    <section class="view" data-view="sizes">
+      <div class="field" style="padding:12px 14px">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--txt-muted)"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="text" id="sizeSearch" placeholder="Search size, country or document…" style="flex:1;background:transparent;border:0;padding:0">
+      </div>
+      <div class="tabs" id="sizeTabs">
+        <div class="tab active" data-filter="all">All</div>
+        <div class="tab" data-filter="passport">Passport</div>
+        <div class="tab" data-filter="visa">Visa</div>
+        <div class="tab" data-filter="id">ID card</div>
+        <div class="tab" data-filter="custom">Custom</div>
+      </div>
+      <div id="sizeList" style="margin-top:8px"></div>
+    </section>
+
+    <!-- ---------- PRINT ---------- -->
+    <section class="view" data-view="print">
+      <div class="sheetprev"><canvas id="sheetCanvas"></canvas></div>
+      <p style="text-align:center;font-size:12.5px;color:var(--txt-muted);margin:12px 0 4px" id="sheetCaption">—</p>
+
+      <div class="section">Print options</div>
+      <div class="field"><span class="k">Paper size</span><span class="v">
+        <select id="paperSel">
+          <option value="4R">4R — 4 × 6 in</option>
+          <option value="A4">A4 — 210 × 297 mm</option>
+          <option value="Letter">Letter — 8.5 × 11 in</option>
+        </select></span></div>
+      <div class="field"><span class="k">Copies</span><span class="v"><span class="stepper"><button id="minus">−</button><b id="copies">6</b><button id="plus">+</button></span></span></div>
+      <div class="field"><span class="k">Margin</span><span class="v"><input type="number" id="margin" value="8" min="0" max="40" style="width:74px"> mm</span></div>
+      <div class="field"><span class="k">Spacing</span><span class="v"><input type="number" id="spacing" value="4" min="0" max="30" style="width:74px"> mm</span></div>
+      <div class="field"><span class="k">Cut guides</span><span class="v"><input type="checkbox" id="cutlines" style="width:22px;height:22px"></span></div>
+      <div class="field"><span class="k">Output</span><span class="v">300 DPI JPEG / PDF</span></div>
+
+      <button class="btn btn-primary" style="margin-top:14px" id="printNow">Print now</button>
+      <div class="hero-actions" style="margin-top:12px">
+        <button class="btn" id="dlSheetJpg">Save sheet JPG</button>
+        <button class="btn" id="dlSheetPdf">Save PDF</button>
+      </div>
+      <div class="note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <span>You can save the sheet as PDF and print it later at any photo studio or home printer.</span>
+      </div>
+    </section>
+
+    <!-- ---------- MY PHOTOS ---------- -->
+    <section class="view" data-view="photos">
+      <div class="tabs" id="galTabs">
+        <div class="tab active" data-gal="all">All</div>
+        <div class="tab" data-gal="passport">Passport</div>
+        <div class="tab" data-gal="visa">Visa</div>
+        <div class="tab" data-gal="other">Other</div>
+      </div>
+      <div class="gallery" id="gallery"></div>
+      <div class="empty hidden" id="galEmpty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg>
+        <div>No saved photos yet.<br>Make one and tap <b>Save photo</b>.</div>
+      </div>
+    </section>
+
+    <!-- ---------- SETTINGS ---------- -->
+    <section class="view" data-view="settings">
+      <div class="field"><span class="k">Appearance</span><span class="v">
+        <select id="themeSel"><option value="auto">System</option><option value="light">Light</option><option value="dark">Dark</option></select></span></div>
+      <div class="field"><span class="k">Default size</span><span class="v"><select id="defSizeSel"></select></span></div>
+      <div class="field"><span class="k">Default paper</span><span class="v">
+        <select id="defPaperSel"><option value="4R">4R — 4 × 6 in</option><option value="A4">A4</option><option value="Letter">Letter</option></select></span></div>
+      <div class="field"><span class="k">Output DPI</span><span class="v">
+        <select id="dpiSel"><option value="300">300 (print)</option><option value="600">600 (high)</option></select></span></div>
+      <div class="field"><span class="k">Saved photos</span><span class="v" id="storageCount">—</span></div>
+      <button class="btn btn-danger" style="margin-top:6px" id="clearAll">Delete all saved photos</button>
+      <div class="note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></svg>
+        <span>Photos are stored only on this device. Clearing site data removes them permanently.</span>
+      </div>
+      <p style="font-size:11.5px;color:var(--txt-muted);text-align:center;margin:18px 8px 0;line-height:1.6">
+        Passport Photo Maker &amp; Print · v2.0<br>Design inspired by Apple's visual language. Not affiliated with Apple.
+      </p>
+    </section>
+  </main>
+
+  <!-- ================= TAB BAR ================= -->
+  <nav class="tabbar" id="tabbar">
+    <button data-goto="home" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/></svg>Home</button>
+    <button data-goto="photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg>My Photos</button>
+    <button data-goto="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="6" rx="1.2"/></svg>Print</button>
+    <button data-goto="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12h2M18 12h2M12 4v2M12 18v2"/></svg>Settings</button>
+  </nav>
+
+  <!-- hidden file input for gallery -->
+  <input type="file" id="fileInput" accept="image/*" class="hidden">
 </div>
 
-<script>
-(function(){
-  const screens = [...document.querySelectorAll('.screen')];
-  const switchEl = document.getElementById('switch');
-  const toast = document.getElementById('toast');
-  let toastTimer;
+<!-- ================= MODAL ================= -->
+<div class="scrim" id="scrim">
+  <div class="modal" id="modal"></div>
+</div>
 
-  // build the screen switcher
-  screens.forEach((s,i)=>{
-    const b=document.createElement('button');
-    b.className='pill'+(s.classList.contains('active')?' active':'');
-    b.textContent=(i+1)+'. '+s.dataset.title;
-    b.dataset.target=s.dataset.screen;
-    switchEl.appendChild(b);
-  });
+<div class="toast" id="toast"></div>
 
-  function show(name){
-    screens.forEach(s=>s.classList.toggle('active', s.dataset.screen===name));
-    [...switchEl.children].forEach(b=>b.classList.toggle('active', b.dataset.target===name));
-    const sc = document.querySelector('.screen.active .screen-scroll');
-    if(sc) sc.scrollTop = 0;
-  }
-
-  function pop(msg){
-    toast.textContent=msg; toast.classList.add('show');
-    clearTimeout(toastTimer); toastTimer=setTimeout(()=>toast.classList.remove('show'),1900);
-  }
-
-  document.addEventListener('click',e=>{
-    const go=e.target.closest('[data-go]');
-    if(go){ show(go.dataset.go); return; }
-    const t=e.target.closest('[data-toast]');
-    if(t){ pop(t.dataset.toast); }
-  });
-  switchEl.addEventListener('click',e=>{ const b=e.target.closest('.pill'); if(b) show(b.dataset.target); });
-
-  // shutter flash
-  const shutter=document.getElementById('shutter');
-  if(shutter) shutter.addEventListener('click',()=>{
-    pop('Captured ✓');
-    setTimeout(()=>show('editor'),420);
-  });
-
-  // segmented control
-  document.querySelectorAll('[data-seg]').forEach(b=>b.addEventListener('click',()=>{
-    const parent=b.parentElement; [...parent.children].forEach(x=>x.classList.remove('active')); b.classList.add('active');
-  }));
-
-  // swatches
-  document.querySelectorAll('[data-swatch]').forEach(s=>s.addEventListener('click',()=>{
-    document.querySelectorAll('[data-swatch]').forEach(x=>x.classList.remove('active')); s.classList.add('active');
-  }));
-
-  // sliders
-  document.querySelectorAll('input[data-val]').forEach(r=>{
-    const out=r.parentElement.querySelector('[data-out]');
-    const paint=()=>{ const p=(r.value-r.min)/(r.max-r.min)*100; r.style.setProperty('--p',p+'%');
-      if(out){ const v=+r.value; out.textContent=(v>0?'+':'')+v; } };
-    r.addEventListener('input',paint); paint();
-  });
-
-  // copies stepper
-  let copies=2;
-  const copiesEl=document.getElementById('copies');
-  const plus=document.getElementById('plus'), minus=document.getElementById('minus');
-  if(plus) plus.addEventListener('click',()=>{ copies=Math.min(20,copies+1); copiesEl.textContent=copies; });
-  if(minus) minus.addEventListener('click',()=>{ copies=Math.max(1,copies-1); copiesEl.textContent=copies; });
-
-  // sizes data + list
-  const SIZES=[
-    {n:'Passport',d:'51 × 51 mm',c:'For Indian passport, many countries',t:'passport',cat:'passport'},
-    {n:'Visa',d:'35 × 45 mm',c:'For Schengen, USA, UK, Canada',t:'visa',cat:'visa'},
-    {n:'Driving License',d:'30 × 40 mm',c:'For Indian driving license',t:'id',cat:'id'},
-    {n:'PAN Card',d:'20 × 20 mm',c:'For Indian PAN card',t:'id',cat:'id'},
-    {n:'Aadhaar Card',d:'35 × 45 mm',c:'For Indian Aadhaar',t:'id',cat:'id'},
-    {n:'Student ID',d:'25 × 30 mm',c:'For school / college ID',t:'id',cat:'id'},
-    {n:'US Passport',d:'51 × 51 mm',c:'2 × 2 inch — United States',t:'passport',cat:'passport'},
-    {n:'Custom Size',d:'W × H · DPI',c:'Set your own dimensions',t:'custom',cat:'custom'}
-  ];
-  const listEl=document.getElementById('sizeList');
-  const searchEl=document.getElementById('sizeSearch');
-  let filter='all', q='';
-  function renderSizes(){
-    listEl.innerHTML='';
-    SIZES.filter(s=>(filter==='all'||s.cat===filter) &&
-      (q===''|| (s.n+' '+s.c+' '+s.d).toLowerCase().includes(q))).forEach(s=>{
-      const el=document.createElement('div');
-      el.className='glass size-row';
-      el.innerHTML='<div class="thumb">'+s.d.replace(' × ','<br>×')+'</div><div class="txt"><b>'+s.n+'</b><small>'+s.c+'</small></div><span class="dim">'+s.d+'</span>';
-      el.addEventListener('click',()=>{ pop('Selected: '+s.n); show('editor'); });
-      listEl.appendChild(el);
-    });
-    if(!listEl.children.length){ listEl.innerHTML='<p style="text-align:center;color:var(--txt-muted);padding:30px 0;font-size:13px">No sizes match your search.</p>'; }
-  }
-  renderSizes();
-  document.querySelectorAll('[data-filter]').forEach(t=>t.addEventListener('click',()=>{
-    document.querySelectorAll('[data-filter]').forEach(x=>x.classList.remove('active')); t.classList.add('active');
-    filter=t.dataset.filter; renderSizes();
-  }));
-  if(searchEl) searchEl.addEventListener('input',()=>{ q=searchEl.value.trim().toLowerCase(); renderSizes(); });
-
-  // gallery
-  const PHOTOS=[
-    {n:'Passport',s:'51 × 51 mm',d:'12 Oct 2026',b:'passport'},
-    {n:'Visa',s:'35 × 45 mm',d:'09 Oct 2026',b:'visa'},
-    {n:'Driving License',s:'30 × 40 mm',d:'02 Oct 2026',b:'other'},
-    {n:'PAN Card',s:'20 × 20 mm',d:'28 Sep 2026',b:'other'},
-    {n:'Aadhaar Card',s:'35 × 45 mm',d:'21 Sep 2026',b:'other'},
-    {n:'US Passport',s:'51 × 51 mm',d:'15 Sep 2026',b:'passport'}
-  ];
-  const galEl=document.getElementById('gallery');
-  let galFilter='all';
-  function renderGal(){
-    galEl.innerHTML='';
-    PHOTOS.filter(p=>galFilter==='all'||p.b===galFilter).forEach(p=>{
-      const el=document.createElement('div');
-      el.className='glass pcard';
-      el.innerHTML='<div class="ph"><span class="badge">'+p.n+'</span></div><div class="meta"><b>'+p.n+'</b><small>'+p.s+' · '+p.d+'</small></div>';
-      el.addEventListener('click',()=>pop(p.n+' · tap to edit, export or delete'));
-      galEl.appendChild(el);
-    });
-  }
-  renderGal();
-  document.querySelectorAll('[data-gal]').forEach(t=>t.addEventListener('click',()=>{
-    document.querySelectorAll('[data-gal]').forEach(x=>x.classList.remove('active')); t.classList.add('active');
-    galFilter=t.dataset.gal; renderGal();
-  }));
-
-  // theme toggle
-  const themeBtn=document.getElementById('themeBtn');
-  const root=document.documentElement;
-  themeBtn.addEventListener('click',()=>{
-    const dark = root.getAttribute('data-theme')==='dark';
-    root.setAttribute('data-theme', dark?'light':'dark');
-    themeBtn.textContent = dark?'◐ Dark mode':'◑ Light mode';
-    const av=document.getElementById('appearanceVal'); if(av) av.textContent = dark?'Light':'Dark';
-  });
-
-  // keyboard nav for demos
-  document.addEventListener('keydown',e=>{
-    const i=screens.findIndex(s=>s.classList.contains('active'));
-    if(e.key==='ArrowRight'&&i<screens.length-1) show(screens[i+1].dataset.screen);
-    if(e.key==='ArrowLeft'&&i>0) show(screens[i-1].dataset.screen);
-  });
-
-  // expose for screenshot tooling
-  window.__setScreen = show;
-  window.__screens = screens.map(s=>s.dataset.screen);
-})();
-</script>
+<script src="js/app.js"></script>
 </body>
 </html>

@@ -1,63 +1,76 @@
-# Passport Photo Maker & Print — Liquid Glass
+# Passport Photo Maker & Print
 
-A premium, production-quality UI prototype for a **Passport Photo Maker & Print** iOS app, built in Apple's **Liquid Glass** design language — translucent glass surfaces, frosted blur, layered depth, soft specular highlights and fluid spring animations.
+A working, installable web app that makes passport, visa and ID photos on your device — real camera capture, cropping, colour adjustments, background replacement, saved-photo library, and a print-ready sheet exported as high-resolution JPEG or PDF.
 
-Everything lives in a single self-contained **`index.html`** — no build step, no dependencies, no framework. Open it and it runs.
+Everything runs **locally in the browser**. No uploads, no accounts, no server.
 
-![All screens](previews/all-screens.png)
+![App screens](previews/app-overview.png)
 
 ---
 
-## ✨ What's inside
+## What actually works
 
-**9 screens, fully navigable:**
+This is a functioning application, not a mockup. Every control is wired to real image processing:
 
-| # | Screen | Highlights |
-|---|--------|-----------|
-| 1 | Welcome / Onboarding | Full-bleed blue gradient, floating glass layers, feature grid, glossy CTA |
-| 2 | Home Dashboard | Action cards, popular sizes rail, quick actions, floating glass tab bar |
-| 3 | Camera Capture | Dark viewfinder, face-guide brackets, glossy glass shutter ring, flash + flip |
-| 4 | Crop & Adjust | Crop frame, segmented glass toolbar, working brightness/contrast/saturation sliders, background swatches |
-| 5 | Preview | Final photo, quality checks, spec sheet, Edit / Save / Export / Share / Save & Print |
-| 6 | ID Photo Sizes | Live search + filter tabs, presets with real dimensions, custom size |
-| 7 | Print Studio | Sheet preview, paper size, copies stepper, quality/colour, Print + Save PDF |
-| 8 | My Photos | Glass gallery grid, filters, badges, empty state |
-| 9 | Settings | Appearance, units, DPI, language, delete control |
+| Feature | How it works |
+|---|---|
+| **Camera capture** | `getUserMedia` live viewfinder with face-alignment guides, front/rear switch and torch where supported |
+| **Gallery import** | File picker + `createImageBitmap` with EXIF orientation handling, so phone photos aren't sideways |
+| **Crop & frame** | Drag to reposition, zoom 1–4×, rotate 90°, flip — locked to the exact aspect ratio of the chosen document |
+| **Adjustments** | Brightness, contrast and saturation applied through the canvas filter pipeline, plus a one-tap auto-enhance |
+| **Background replacement** | Flood-fill from the border with a dominant-colour seed and a feathered edge — repaints the wall behind you in white, blue or any colour |
+| **ID photo sizes** | Real millimetre → pixel maths at your chosen DPI (e.g. 51 × 51 mm @ 300 DPI = 602 × 602 px) |
+| **Quality checks** | Genuine measurements: source resolution vs output (upscaling detection), side-margin background uniformity, and face-area exposure |
+| **Saved library** | IndexedDB store with thumbnails, filters, download, share and delete |
+| **Print sheet** | Composes N copies onto 4R / A4 / Letter at 300 DPI with adjustable margin, spacing and cut guides |
+| **PDF export** | A dependency-free PDF writer that embeds the sheet JPEG as a `DCTDecode` image XObject |
+| **Share / print** | Web Share API with files, and the system print dialog |
+| **Offline / installable** | Service worker caches the shell; a web app manifest makes it installable to the home screen |
+| **Light & dark** | Follows the system theme, or force either from Settings |
 
-## 🧊 The Liquid Glass system
+## ▶️ Running it
 
-- **Frosted translucent surfaces** via `backdrop-filter: blur(26px) saturate(185%)`
-- **Luminous hairline borders** + inset specular highlights on every panel
-- **Animated colour orbs** drifting behind the glass — this is what gives it the "liquid" feel
-- **Glossy primary buttons** with a moving sheen sweep on hover
-- **Floating pill navigation** and spring-based press feedback
-- **Light & dark mode** — toggle in the top-right
-- **Graceful fallback** — content stays readable where blur is unsupported
-
-## ▶️ Run it
+The camera needs a **secure context** — `https://` or `localhost`. Opening `index.html` from the filesystem (`file://`) will run everything *except* the live camera, so serve it locally instead:
 
 ```bash
-# just open the file
-open index.html          # macOS
-xdg-open index.html      # Linux
-# or serve it
+cd passport-photo-maker
 python3 -m http.server 8000
+# then open http://localhost:8000
 ```
 
-Keyboard: **← / →** move between screens. Tap anything — buttons navigate, sliders move, toasts fire.
+The published version runs over HTTPS on GitHub Pages, so the camera works there too.
 
-## 🖼️ Previews
+## 📁 Layout
 
-Full-resolution renders of every screen are in [`previews/`](previews/):
+```
+index.html               the app
+css/app.css              liquid-glass design system
+js/app.js                camera, editor, background removal, sheet composer, PDF writer
+manifest.webmanifest     PWA manifest
+sw.js                    offline service worker
+icons/                   app icons (192, 512, maskable)
+showcase.html            the original 8-screen design study (self-contained)
+previews/                renders of the design study
+previews/app/            screenshots of the working app
+```
 
-- `01-welcome.png` … `09-settings.png` — each screen
-- `10-home-dark.png` — dark mode
-- `all-screens.png` — combined contact sheet
+## 📐 Sizes included
+
+Passport (India 51×51 mm, US 2×2 in, UK 35×45 mm) · Visa (Schengen, US, Canada) · Driving licence · PAN card · Aadhaar · Student ID · Custom (any width, height and DPI).
+
+Dimensions are provided as layout references. **Always confirm the current official requirements for your document** — specifications change, and this app does not claim official compliance.
+
+## 🧊 Design
+
+The interface uses a Liquid Glass language: frosted translucent panels with `backdrop-filter`, hairline luminous borders, inset specular highlights, animated colour orbs drifting behind the glass, glossy primary buttons and floating pill navigation. Inspired by Apple's visual language; not affiliated with Apple and copying no proprietary assets.
+
+## ⚠️ Honest limitations
+
+- **Background replacement** is a colour-based flood fill, not machine learning. It works well against a plain, evenly lit wall and will struggle with busy or multi-coloured backgrounds. There is a tolerance slider to tune it.
+- **Quality checks are heuristics**, not face detection — they measure resolution, exposure and background uniformity.
+- **Camera capture** depends on browser and device support; the app degrades to the gallery picker when a camera isn't available.
+- **Print output** is a raster sheet at 300 DPI. Actual print quality depends on your printer and paper.
 
 ## 🛠️ Tech
 
-Plain **HTML + CSS + vanilla JavaScript**. No build, no npm, no framework. Uses system SF-style typography, CSS custom properties for theming, and a tiny amount of JS for navigation and interactive state.
-
-## ⚠️ Note
-
-This is a **design prototype**. Photo sizes shown are layout references — always confirm the current official requirements for any document before printing. Not affiliated with Apple; the design is inspired by Apple's visual language and copies no proprietary assets.
+Plain HTML, CSS and JavaScript — no framework, no build step, no dependencies.
